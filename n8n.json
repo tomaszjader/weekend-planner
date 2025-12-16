@@ -1,0 +1,190 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "triggerTimes": {
+          "item": [
+            {
+              "mode": "everyWeek",
+              "hour": 17,
+              "weekday": "friday"
+            }
+          ]
+        }
+      },
+      "name": "Cron – Piątek 17:00",
+      "type": "n8n-nodes-base.cron",
+      "typeVersion": 1,
+      "position": [
+        -480,
+        96
+      ],
+      "id": "40253f21-9c8f-4e89-a764-36f28ddf4b39"
+    },
+    {
+      "parameters": {
+        "sheetId": "WSTAW_ID_ARKUSZA",
+        "range": "Weekend_aktywnosci!A:C",
+        "options": {}
+      },
+      "name": "Google Sheets – Aktywnosci",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 2,
+      "position": [
+        -256,
+        0
+      ],
+      "id": "fbc20e50-ef46-4b35-855f-9762bde370c2",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "AepdgD0AInbXXb9A",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sheetId": "WSTAW_ID_ARKUSZA",
+        "range": "Miejsca_do_odwiedzenia!A:C",
+        "options": {}
+      },
+      "name": "Google Sheets – Miejsca",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 2,
+      "position": [
+        -256,
+        192
+      ],
+      "id": "da960d7c-7b3f-4a00-9d70-f1443cee4b77",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "AepdgD0AInbXXb9A",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "const aktywnosci = items.filter(i => i.json.typ).map(i => `- ${i.json.nazwa} (${i.json.typ})`).join('\\n');\n\nconst miejsca = items.filter(i => i.json.energia).map(i => `- ${i.json.nazwa} (${i.json.typ})`).join('\\n');\n\nreturn [{ json: { context: `AKTYWNOŚCI:\\n${aktywnosci}\\n\\nMIEJSCA:\\n${miejsca}` } }];"
+      },
+      "name": "Function – Kontekst",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        -32,
+        96
+      ],
+      "id": "ba51afab-594a-4cf4-9bca-0dcabcfbbe28"
+    },
+    {
+      "parameters": {
+        "model": "chatgpt-4o-latest",
+        "options": {},
+        "requestOptions": {}
+      },
+      "name": "OpenAI – Generuj plan",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1,
+      "position": [
+        192,
+        96
+      ],
+      "id": "8dde5ee0-3681-4e68-baff-c839aefa29b2",
+      "credentials": {
+        "openAiApi": {
+          "id": "8z6fF0njNGN7axS5",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "WSTAW_CHAT_ID",
+        "text": "🧭 *PLAN WEEKENDU*\n\n{{$json.choices[0].message.content}}\n\n✅ Akceptuję\n🔁 Generuj nowy",
+        "additionalFields": {}
+      },
+      "name": "Telegram – Wyślij plan",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        416,
+        96
+      ],
+      "id": "0381a485-655f-427d-931f-9218bf64b4eb",
+      "webhookId": "8870d552-2e09-4425-92eb-395daaa86e23",
+      "credentials": {
+        "telegramApi": {
+          "id": "gFqrqvMMuykchDgs",
+          "name": "Telegram account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Cron – Piątek 17:00": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets – Aktywnosci",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Google Sheets – Miejsca",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets – Aktywnosci": {
+      "main": [
+        [
+          {
+            "node": "Function – Kontekst",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets – Miejsca": {
+      "main": [
+        [
+          {
+            "node": "Function – Kontekst",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Function – Kontekst": {
+      "main": [
+        [
+          {
+            "node": "OpenAI – Generuj plan",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI – Generuj plan": {
+      "main": [
+        [
+          {
+            "node": "Telegram – Wyślij plan",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "fc1ba0345969f7228871df9e64b3b47e4f43ee33b19ce42717b44162e39dba6e"
+  }
+}
