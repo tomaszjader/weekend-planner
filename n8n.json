@@ -7,7 +7,7 @@
             {
               "mode": "everyWeek",
               "hour": 17,
-              "weekday": "friday"
+              "weekday": "5"
             }
           ]
         }
@@ -16,22 +16,22 @@
       "type": "n8n-nodes-base.cron",
       "typeVersion": 1,
       "position": [
-        -480,
+        -592,
         96
       ],
       "id": "40253f21-9c8f-4e89-a764-36f28ddf4b39"
     },
     {
       "parameters": {
-        "sheetId": "WSTAW_ID_ARKUSZA",
-        "range": "Weekend_aktywnosci!A:C",
+        "sheetId": "16nYHJy38A1BfEKA485PZYvyrNXzCPWEJHa7oS8D4drA",
+        "rawData": true,
         "options": {}
       },
       "name": "Google Sheets – Aktywnosci",
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 2,
       "position": [
-        -256,
+        -368,
         0
       ],
       "id": "fbc20e50-ef46-4b35-855f-9762bde370c2",
@@ -44,15 +44,16 @@
     },
     {
       "parameters": {
-        "sheetId": "WSTAW_ID_ARKUSZA",
-        "range": "Miejsca_do_odwiedzenia!A:C",
+        "sheetId": "1RRZiB8P17IhI_ApOBq5PkxV5pshbNnAyQlm3MQlclJ4",
+        "range": "Arkusz1",
+        "rawData": true,
         "options": {}
       },
       "name": "Google Sheets – Miejsca",
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 2,
       "position": [
-        -256,
+        -368,
         192
       ],
       "id": "da960d7c-7b3f-4a00-9d70-f1443cee4b77",
@@ -71,43 +72,23 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        -32,
+        -144,
         96
       ],
       "id": "ba51afab-594a-4cf4-9bca-0dcabcfbbe28"
     },
     {
       "parameters": {
-        "model": "chatgpt-4o-latest",
-        "options": {},
-        "requestOptions": {}
-      },
-      "name": "OpenAI – Generuj plan",
-      "type": "n8n-nodes-base.openAi",
-      "typeVersion": 1,
-      "position": [
-        192,
-        96
-      ],
-      "id": "8dde5ee0-3681-4e68-baff-c839aefa29b2",
-      "credentials": {
-        "openAiApi": {
-          "id": "8z6fF0njNGN7axS5",
-          "name": "OpenAi account"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "chatId": "WSTAW_CHAT_ID",
-        "text": "🧭 *PLAN WEEKENDU*\n\n{{$json.choices[0].message.content}}\n\n✅ Akceptuję\n🔁 Generuj nowy",
-        "additionalFields": {}
+        "operation": "sendAndWait",
+        "chatId": "={{ $json.id_chat }}",
+        "message": "=🧭 *PLAN WEEKENDU*\\n{{ $('Message a model').item.json.output[0].content[0].text }}\\n\\n\\n✅ Akceptuję\\n🔁 Generuj nowy",
+        "options": {}
       },
       "name": "Telegram – Wyślij plan",
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1,
       "position": [
-        416,
+        656,
         96
       ],
       "id": "0381a485-655f-427d-931f-9218bf64b4eb",
@@ -118,6 +99,63 @@
           "name": "Telegram account"
         }
       }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "chatgpt-4o-latest",
+          "mode": "list",
+          "cachedResultName": "CHATGPT-4O-LATEST"
+        },
+        "responses": {
+          "values": [
+            {
+              "role": "system",
+              "content": "=Jesteś asystentem planowania weekendu. Tworzysz lekki, atrakcyjny plan weekendu, który konkuruje ze scrollowaniem social mediów."
+            },
+            {
+              "content": "=Zasady:\\\\n- brak godzin, tylko: rano / popołudnie / wieczór\\\\n- sobota i niedziela\\\\n- każdego dnia: ruch, odpoczynek bez poczucia winy, 1 element rozwojowy\\\\n- maks 2 aktywności na blok\\\\n- styl: spokojny, przyjazny, inspirujący\\\\n\\\\nDane:\\\\n{{$json.context}}\\\\n\\\\nNa końcu dodaj INTENCJĘ WEEKENDU i PYTANIE ROZWOJOWE."
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.1,
+      "position": [
+        80,
+        96
+      ],
+      "id": "efa5f952-68a4-4b1b-94c8-25e8452bdf48",
+      "name": "Message a model",
+      "credentials": {
+        "openAiApi": {
+          "id": "8z6fF0njNGN7axS5",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "value": "r5iHFZ9vD734mOPl",
+          "mode": "list",
+          "cachedResultName": "n8n",
+          "cachedResultUrl": "/projects/bObCSV5kAX5lUQ0D/datatables/r5iHFZ9vD734mOPl"
+        }
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1,
+      "position": [
+        432,
+        96
+      ],
+      "id": "2ddd6407-14cf-4030-9d4e-a9e2f2b6d348",
+      "name": "Get row(s)"
     }
   ],
   "connections": {
@@ -163,14 +201,25 @@
       "main": [
         [
           {
-            "node": "OpenAI – Generuj plan",
+            "node": "Message a model",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "OpenAI – Generuj plan": {
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Get row(s)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s)": {
       "main": [
         [
           {
