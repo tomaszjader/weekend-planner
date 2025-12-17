@@ -16,7 +16,7 @@
       "type": "n8n-nodes-base.cron",
       "typeVersion": 1,
       "position": [
-        -592,
+        -640,
         96
       ],
       "id": "40253f21-9c8f-4e89-a764-36f28ddf4b39"
@@ -82,6 +82,26 @@
         "operation": "sendAndWait",
         "chatId": "={{ $json.id_chat }}",
         "message": "=🧭 *PLAN WEEKENDU*\\n{{ $('Message a model').item.json.output[0].content[0].text }}\\n\\n\\n✅ Akceptuję\\n🔁 Generuj nowy",
+        "responseType": "customForm",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Tak czy nie",
+              "fieldType": "radio",
+              "defaultValue": "Tak",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Tak"
+                  },
+                  {
+                    "option": "Nie"
+                  }
+                ]
+              }
+            }
+          ]
+        },
         "options": {}
       },
       "name": "Telegram – Wyślij plan",
@@ -156,6 +176,39 @@
       ],
       "id": "2ddd6407-14cf-4030-9d4e-a9e2f2b6d348",
       "name": "Get row(s)"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "06de9b38-b70b-4038-a830-89b0a2f02bc7",
+              "leftValue": "={{ $json.data['Tak czy nie'] }}",
+              "rightValue": "NIe",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        880,
+        96
+      ],
+      "id": "6253031e-6ff7-47d7-9fe4-e128571be3e6",
+      "name": "If"
     }
   ],
   "connections": {
@@ -208,6 +261,17 @@
         ]
       ]
     },
+    "Telegram – Wyślij plan": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
     "Message a model": {
       "main": [
         [
@@ -224,6 +288,23 @@
         [
           {
             "node": "Telegram – Wyślij plan",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Google Sheets – Miejsca",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Google Sheets – Aktywnosci",
             "type": "main",
             "index": 0
           }
