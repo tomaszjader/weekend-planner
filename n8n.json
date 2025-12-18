@@ -16,8 +16,8 @@
       "type": "n8n-nodes-base.cron",
       "typeVersion": 1,
       "position": [
-        -640,
-        96
+        -848,
+        296
       ],
       "id": "40253f21-9c8f-4e89-a764-36f28ddf4b39"
     },
@@ -31,8 +31,8 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 2,
       "position": [
-        -368,
-        0
+        -624,
+        224
       ],
       "id": "fbc20e50-ef46-4b35-855f-9762bde370c2",
       "credentials": {
@@ -53,8 +53,8 @@
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 2,
       "position": [
-        -368,
-        192
+        848,
+        296
       ],
       "id": "da960d7c-7b3f-4a00-9d70-f1443cee4b77",
       "credentials": {
@@ -72,8 +72,8 @@
       "type": "n8n-nodes-base.function",
       "typeVersion": 1,
       "position": [
-        -144,
-        96
+        -400,
+        152
       ],
       "id": "ba51afab-594a-4cf4-9bca-0dcabcfbbe28"
     },
@@ -108,8 +108,8 @@
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1,
       "position": [
-        656,
-        96
+        400,
+        80
       ],
       "id": "0381a485-655f-427d-931f-9218bf64b4eb",
       "webhookId": "8870d552-2e09-4425-92eb-395daaa86e23",
@@ -145,8 +145,8 @@
       "type": "@n8n/n8n-nodes-langchain.openAi",
       "typeVersion": 2.1,
       "position": [
-        80,
-        96
+        -176,
+        80
       ],
       "id": "efa5f952-68a4-4b1b-94c8-25e8452bdf48",
       "name": "Message a model",
@@ -171,8 +171,8 @@
       "type": "n8n-nodes-base.dataTable",
       "typeVersion": 1,
       "position": [
-        432,
-        96
+        176,
+        80
       ],
       "id": "2ddd6407-14cf-4030-9d4e-a9e2f2b6d348",
       "name": "Get row(s)"
@@ -204,11 +204,33 @@
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.3,
       "position": [
-        880,
-        96
+        624,
+        80
       ],
       "id": "6253031e-6ff7-47d7-9fe4-e128571be3e6",
-      "name": "If"
+      "name": "Czy akceptacja"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Get row(s)').item.json.id_chat }}",
+        "text": "Koniec",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        848,
+        32
+      ],
+      "id": "cd9f15b4-a00b-427d-911f-0e7b6d982123",
+      "name": "Send a text message",
+      "webhookId": "45bbf6c3-d536-4584-aaf9-aa5208827d06",
+      "credentials": {
+        "telegramApi": {
+          "id": "gFqrqvMMuykchDgs",
+          "name": "Telegram account"
+        }
+      }
     }
   ],
   "connections": {
@@ -265,7 +287,7 @@
       "main": [
         [
           {
-            "node": "If",
+            "node": "Czy akceptacja",
             "type": "main",
             "index": 0
           }
@@ -294,9 +316,8 @@
         ]
       ]
     },
-    "If": {
+    "Czy akceptacja": {
       "main": [
-        [],
         [
           {
             "node": "Google Sheets – Miejsca",
@@ -305,6 +326,13 @@
           },
           {
             "node": "Google Sheets – Aktywnosci",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send a text message",
             "type": "main",
             "index": 0
           }
