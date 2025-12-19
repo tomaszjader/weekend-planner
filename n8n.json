@@ -102,7 +102,9 @@
             }
           ]
         },
-        "options": {}
+        "options": {
+          "appendAttribution": false
+        }
       },
       "name": "Telegram – Wyślij plan",
       "type": "n8n-nodes-base.telegram",
@@ -214,7 +216,9 @@
       "parameters": {
         "chatId": "={{ $('Get row(s)').item.json.id_chat }}",
         "text": "Koniec",
-        "additionalFields": {}
+        "additionalFields": {
+          "appendAttribution": false
+        }
       },
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
