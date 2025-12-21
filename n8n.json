@@ -235,74 +235,6 @@
           "name": "Telegram account"
         }
       }
-    },
-    {
-      "parameters": {
-        "operation": "update",
-        "documentId": {
-          "__rl": true,
-          "value": "1RRZiB8P17IhI_ApOBq5PkxV5pshbNnAyQlm3MQlclJ4",
-          "mode": "list",
-          "cachedResultName": "miejsca",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1RRZiB8P17IhI_ApOBq5PkxV5pshbNnAyQlm3MQlclJ4/edit?usp=drivesdk"
-        },
-        "sheetName": {
-          "__rl": true,
-          "value": "gid=0",
-          "mode": "list",
-          "cachedResultName": "Arkusz1",
-          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1RRZiB8P17IhI_ApOBq5PkxV5pshbNnAyQlm3MQlclJ4/edit#gid=0"
-        },
-        "columns": {
-          "mappingMode": "autoMapInputData",
-          "value": {
-            "row_number": 0
-          },
-          "matchingColumns": [
-            "row_number"
-          ],
-          "schema": [
-            {
-              "id": "dsa",
-              "displayName": "dsa",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "string",
-              "canBeUsedToMatch": true,
-              "removed": false
-            },
-            {
-              "id": "row_number",
-              "displayName": "row_number",
-              "required": false,
-              "defaultMatch": false,
-              "display": true,
-              "type": "number",
-              "canBeUsedToMatch": true,
-              "readOnly": true,
-              "removed": false
-            }
-          ],
-          "attemptToConvertTypes": false,
-          "convertFieldsToString": false
-        },
-        "options": {}
-      },
-      "type": "n8n-nodes-base.googleSheets",
-      "typeVersion": 4.7,
-      "position": [
-        1088,
-        32
-      ],
-      "id": "5077dcb8-56fd-44fb-9990-a9ce1798d295",
-      "name": "Update row in sheet",
-      "credentials": {
-        "googleSheetsOAuth2Api": {
-          "id": "AepdgD0AInbXXb9A",
-          "name": "Google Sheets account 2"
-        }
-      }
     }
   ],
   "connections": {
@@ -413,13 +345,7 @@
     },
     "Send a text message": {
       "main": [
-        [
-          {
-            "node": "Update row in sheet",
-            "type": "main",
-            "index": 0
-          }
-        ]
+        []
       ]
     }
   },
